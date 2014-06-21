@@ -64,4 +64,4 @@ colnames(tidy) <- gsub("\\.mean\\.\\.","Mean",colnames(tidy))
 colnames(tidy) <- gsub("\\.std\\.\\.","Std",colnames(tidy))
 
 ## Write tidy datset to file in the working directory
-write.csv(tidy,"tidy_dataset.csv")
+write.table(tidy,"tidy_dataset_table.txt")
