@@ -55,7 +55,13 @@ tidy <- data.frame(rbind(tidyTrain,tidyTest))
 ## Aggregate data frame by averaging all variables for each Activity/Subject pair
 tidy <- aggregate(.~tidy$Activity+tidy$Subject,data=tidy,mean,na.action=na.omit)
 tidy <- tidy[,-c(3,4)]
+
+## Add meaningful variable names
 colnames(tidy)[1:2] <- c("Activity","Subject")
+colnames(tidy) <- gsub("\\.mean\\.\\.\\.","Mean",colnames(tidy))
+colnames(tidy) <- gsub("\\.std\\.\\.\\.","Std",colnames(tidy))
+colnames(tidy) <- gsub("\\.mean\\.\\.","Mean",colnames(tidy))
+colnames(tidy) <- gsub("\\.std\\.\\.","Std",colnames(tidy))
 
 ## Write tidy datset to file in the working directory
 write.csv(tidy,"tidy_dataset.csv")
