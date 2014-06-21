@@ -39,27 +39,23 @@ x_train$Subject <- as.factor(subject_train$V1)
 ## Add only Activity, Subject,MEAN & STD variable to Tidy Dataset
 tidyTest <- data.frame(x_test$Activity,x_test$Subject)
 tidyTest <- cbind(tidyTest,
-              x_test[,which(grepl("mean",names(x_test)))],
-              x_test[,which(grepl("std",names(x_test)))])
+              x_test[,which(grepl("mean\\(\\)",names(x_test)))],
+              x_test[,which(grepl("std\\(\\)",names(x_test)))])
 colnames(tidyTest)[1:2] <- c("Activity","Subject")
 
 tidyTrain <- data.frame(x_train$Activity,x_train$Subject)
 tidyTrain <- cbind(tidyTrain,
-               x_train[,which(grepl("mean",names(x_train)))],
-               x_train[,which(grepl("std",names(x_train)))])
+               x_train[,which(grepl("mean\\(\\)",names(x_train)))],
+               x_train[,which(grepl("std\\(\\)",names(x_train)))])
 colnames(tidyTrain)[1:2] <- c("Activity","Subject")
 
 ## Merge Test and Train
 tidy <- data.frame(rbind(tidyTrain,tidyTest))
 
+## Aggregate data frame by averaging all variables for each Activity/Subject pair
+tidy <- aggregate(.~tidy$Activity+tidy$Subject,data=tidy,mean,na.action=na.omit)
+tidy <- tidy[,-c(3,4)]
+colnames(tidy)[1:2] <- c("Activity","Subject")
 
-## Subset by mean & std variables
-## grepl("mean",features[,2])
-
-#You should create one R script called run_analysis.R that does the following. 
-# 1. Merges the training and the test sets to create one data set.
-# 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
-# 3. Uses descriptive activity names to name the activities in the data set
-# 4. Appropriately labels the data set with descriptive variable names. 
-# 5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
-
+## Write tidy datset to file in the working directory
+write.csv(tidy,"tidy_dataset.csv")
